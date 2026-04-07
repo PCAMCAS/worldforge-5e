@@ -1,7 +1,8 @@
-import { useMemo, useState } from 'react'
-import { mockEvents } from '../data/mockEvents'
-import { mockLocations } from '../data/mockLocations'
+import { useEffect, useMemo, useState } from 'react'
+import { getHistoricalEvents } from '../api/events'
+import { getLocations } from '../api/locations'
 import type { HistoricalEvent } from '../types/event'
+import type { Location } from '../types/location'
 
 interface EventWithLocation {
   event: HistoricalEvent
@@ -14,17 +15,62 @@ interface UseHistoricalEventsReturn {
   setSearch: (value: string) => void
   filteredEvents: EventWithLocation[]
   totalEvents: number
+  isLoading: boolean
+  error: string
 }
 
 export function useHistoricalEvents(): UseHistoricalEventsReturn {
+  const [events, setEvents] = useState<HistoricalEvent[]>([])
+  const [locations, setLocations] = useState<Location[]>([])
   const [search, setSearch] = useState('')
+  const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState('')
+
+  useEffect(() => {
+    let isMounted = true
+
+    async function loadData() {
+      try {
+        setIsLoading(true)
+        setError('')
+
+        const [eventsData, locationsData] = await Promise.all([
+          getHistoricalEvents(),
+          getLocations(),
+        ])
+
+        if (isMounted) {
+          setEvents(eventsData)
+          setLocations(locationsData)
+        }
+      } catch (err) {
+        if (isMounted) {
+          setError(
+            err instanceof Error
+              ? err.message
+              : 'No se pudieron cargar los eventos históricos.',
+          )
+        }
+      } finally {
+        if (isMounted) {
+          setIsLoading(false)
+        }
+      }
+    }
+
+    loadData()
+
+    return () => {
+      isMounted = false
+    }
+  }, [])
 
   const filteredEvents = useMemo(() => {
     const normalizedSearch = search.trim().toLowerCase()
 
-    return mockEvents
+    return events
       .map((event) => {
-        const location = mockLocations.find((item) => item.id === event.locationId)
+        const location = locations.find((item) => item.id === event.locationId)
 
         return {
           event,
@@ -43,13 +89,15 @@ export function useHistoricalEvents(): UseHistoricalEventsReturn {
           locationName.toLowerCase().includes(normalizedSearch)
         )
       })
-  }, [search])
+  }, [events, locations, search])
 
   return {
-    events: mockEvents,
+    events,
     search,
     setSearch,
     filteredEvents,
-    totalEvents: mockEvents.length,
+    totalEvents: events.length,
+    isLoading,
+    error,
   }
 }

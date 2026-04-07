@@ -1,8 +1,25 @@
-import { mockLocations } from '../data/mockLocations'
-import { mockNpcs } from '../data/mockNpcs'
-import { mockEvents } from '../data/mockEvents'
+import { useHistoricalEvents } from '../hooks/useHistoricalEvents'
+import { useLocations } from '../hooks/useLocations'
+import { useNpcs } from '../hooks/useNpcs'
 
 function HomePage() {
+  const {
+    totalLocations,
+    isLoading: isLoadingLocations,
+    error: locationsError,
+  } = useLocations()
+
+  const { totalNpcs, isLoading: isLoadingNpcs, error: npcsError } = useNpcs()
+
+  const {
+    totalEvents,
+    isLoading: isLoadingEvents,
+    error: eventsError,
+  } = useHistoricalEvents()
+
+  const isLoading = isLoadingLocations || isLoadingNpcs || isLoadingEvents
+  const error = locationsError || npcsError || eventsError
+
   return (
     <section className="space-y-8">
       <div className="rounded-3xl border border-white/10 bg-white/5 p-8 shadow-2xl backdrop-blur">
@@ -20,12 +37,30 @@ function HomePage() {
         </p>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-        <StatCard label="Localizaciones" value={mockLocations.length} />
-        <StatCard label="NPCs" value={mockNpcs.length} />
-        <StatCard label="Eventos históricos" value={mockEvents.length} />
-        <StatCard label="Generadores" value={3} />
-      </div>
+      {isLoading ? (
+        <div className="rounded-3xl border border-white/10 bg-slate-900/40 p-10 text-center">
+          <h3 className="text-2xl font-semibold text-white">
+            Cargando información del mundo...
+          </h3>
+          <p className="mt-3 text-slate-400">
+            Espera unos segundos mientras se consultan los datos de la API.
+          </p>
+        </div>
+      ) : error ? (
+        <div className="rounded-3xl border border-red-400/20 bg-red-500/5 p-10 text-center">
+          <h3 className="text-2xl font-semibold text-white">
+            No se ha podido cargar el dashboard
+          </h3>
+          <p className="mt-3 text-slate-300">{error}</p>
+        </div>
+      ) : (
+        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+          <StatCard label="Localizaciones" value={totalLocations} />
+          <StatCard label="NPCs" value={totalNpcs} />
+          <StatCard label="Eventos históricos" value={totalEvents} />
+          <StatCard label="Generadores" value={3} />
+        </div>
+      )}
     </section>
   )
 }

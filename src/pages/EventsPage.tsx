@@ -3,7 +3,8 @@ import { mockLocations } from '../data/mockLocations'
 import { useHistoricalEvents } from '../hooks/useHistoricalEvents'
 
 function EventsPage() {
-  const { search, setSearch, filteredEvents, totalEvents } = useHistoricalEvents()
+  const { search, setSearch, filteredEvents, totalEvents, isLoading, error } =
+    useHistoricalEvents()
 
   return (
     <section className="space-y-8">
@@ -45,7 +46,23 @@ function EventsPage() {
         </div>
       </div>
 
-      {filteredEvents.length > 0 ? (
+      {isLoading ? (
+        <div className="rounded-3xl border border-white/10 bg-slate-900/40 p-10 text-center">
+          <h3 className="text-2xl font-semibold text-white">
+            Cargando eventos históricos...
+          </h3>
+          <p className="mt-3 text-slate-400">
+            Espera unos segundos mientras se consultan los datos.
+          </p>
+        </div>
+      ) : error ? (
+        <div className="rounded-3xl border border-red-400/20 bg-red-500/5 p-10 text-center">
+          <h3 className="text-2xl font-semibold text-white">
+            No se han podido cargar los eventos
+          </h3>
+          <p className="mt-3 text-slate-300">{error}</p>
+        </div>
+      ) : filteredEvents.length > 0 ? (
         <div className="grid gap-6 xl:grid-cols-2">
           {filteredEvents.map(({ event }) => {
             const location = mockLocations.find((item) => item.id === event.locationId)

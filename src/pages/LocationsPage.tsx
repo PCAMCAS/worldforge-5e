@@ -2,7 +2,14 @@ import LocationCard from '../components/LocationCard'
 import { useLocations } from '../hooks/useLocations'
 
 function LocationsPage() {
-  const { search, setSearch, filteredLocations, totalLocations } = useLocations()
+  const {
+    search,
+    setSearch,
+    filteredLocations,
+    totalLocations,
+    isLoading,
+    error,
+  } = useLocations()
 
   return (
     <section className="space-y-8">
@@ -45,7 +52,23 @@ function LocationsPage() {
         </div>
       </div>
 
-      {filteredLocations.length > 0 ? (
+      {isLoading ? (
+        <div className="rounded-3xl border border-white/10 bg-slate-900/40 p-10 text-center">
+          <h3 className="text-2xl font-semibold text-white">
+            Cargando localizaciones...
+          </h3>
+          <p className="mt-3 text-slate-400">
+            Espera unos segundos mientras se consultan los datos.
+          </p>
+        </div>
+      ) : error ? (
+        <div className="rounded-3xl border border-red-400/20 bg-red-500/5 p-10 text-center">
+          <h3 className="text-2xl font-semibold text-white">
+            No se han podido cargar las localizaciones
+          </h3>
+          <p className="mt-3 text-slate-300">{error}</p>
+        </div>
+      ) : filteredLocations.length > 0 ? (
         <div className="grid gap-6 xl:grid-cols-2">
           {filteredLocations.map((location) => (
             <LocationCard key={location.id} location={location} />
