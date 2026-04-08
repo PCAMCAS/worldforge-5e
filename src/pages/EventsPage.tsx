@@ -1,5 +1,4 @@
 import HistoricalEventCard from '../components/HistoricalEventCard'
-import { mockLocations } from '../data/mockLocations'
 import { useHistoricalEvents } from '../hooks/useHistoricalEvents'
 
 function EventsPage() {
@@ -46,6 +45,20 @@ function EventsPage() {
         </div>
       </div>
 
+      {!isLoading && !error && (
+        <div className="rounded-2xl border border-white/10 bg-slate-900/40 px-5 py-3">
+          <p className="text-sm text-slate-300">
+            Mostrando{' '}
+            <span className="font-semibold text-white">
+              {filteredEvents.length}
+            </span>{' '}
+            de{' '}
+            <span className="font-semibold text-white">{totalEvents}</span>{' '}
+            eventos
+          </p>
+        </div>
+      )}
+
       {isLoading ? (
         <div className="rounded-3xl border border-white/10 bg-slate-900/40 p-10 text-center">
           <h3 className="text-2xl font-semibold text-white">
@@ -64,17 +77,13 @@ function EventsPage() {
         </div>
       ) : filteredEvents.length > 0 ? (
         <div className="grid gap-6 xl:grid-cols-2">
-          {filteredEvents.map(({ event }) => {
-            const location = mockLocations.find((item) => item.id === event.locationId)
-
-            return (
-              <HistoricalEventCard
-                key={event.id}
-                event={event}
-                location={location}
-              />
-            )
-          })}
+          {filteredEvents.map(({ event, location }) => (
+            <HistoricalEventCard
+              key={event.id}
+              event={event}
+              location={location}
+            />
+          ))}
         </div>
       ) : (
         <div className="rounded-3xl border border-dashed border-white/15 bg-slate-900/40 p-10 text-center">

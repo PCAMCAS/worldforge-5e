@@ -10,6 +10,7 @@ interface UseLocationsReturn {
   totalLocations: number
   isLoading: boolean
   error: string
+  reloadLocations: () => Promise<void>
 }
 
 export function useLocations(): UseLocationsReturn {
@@ -18,39 +19,26 @@ export function useLocations(): UseLocationsReturn {
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState('')
 
+  async function loadLocations() {
+    try {
+      setIsLoading(true)
+      setError('')
+
+      const data = await getLocations()
+      setLocations(data)
+    } catch (err) {
+      setError(
+        err instanceof Error
+          ? err.message
+          : 'No se pudieron cargar las localizaciones.',
+      )
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
   useEffect(() => {
-    let isMounted = true
-
-    async function loadLocations() {
-      try {
-        setIsLoading(true)
-        setError('')
-
-        const data = await getLocations()
-
-        if (isMounted) {
-          setLocations(data)
-        }
-      } catch (err) {
-        if (isMounted) {
-          setError(
-            err instanceof Error
-              ? err.message
-              : 'No se pudieron cargar las localizaciones.',
-          )
-        }
-      } finally {
-        if (isMounted) {
-          setIsLoading(false)
-        }
-      }
-    }
-
-    loadLocations()
-
-    return () => {
-      isMounted = false
-    }
+    void loadLocations()
   }, [])
 
   const filteredLocations = useMemo(() => {
@@ -78,5 +66,6 @@ export function useLocations(): UseLocationsReturn {
     totalLocations: locations.length,
     isLoading,
     error,
+    reloadLocations: loadLocations,
   }
 }

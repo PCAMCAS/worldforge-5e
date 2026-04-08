@@ -1,3 +1,4 @@
+import { Link } from 'react-router'
 import LocationCard from '../components/LocationCard'
 import { useLocations } from '../hooks/useLocations'
 
@@ -14,17 +15,30 @@ function LocationsPage() {
   return (
     <section className="space-y-8">
       <div className="rounded-3xl border border-white/10 bg-white/5 p-8 backdrop-blur">
-        <span className="inline-flex rounded-full border border-cyan-400/30 bg-cyan-400/10 px-3 py-1 text-sm font-medium text-cyan-300">
-          World locations
-        </span>
+        <div className="flex flex-wrap items-start justify-between gap-4">
+          <div>
+            <span className="inline-flex rounded-full border border-cyan-400/30 bg-cyan-400/10 px-3 py-1 text-sm font-medium text-cyan-300">
+              World locations
+            </span>
 
-        <h2 className="mt-6 text-4xl font-bold text-white">Localizaciones</h2>
+            <h2 className="mt-6 text-4xl font-bold text-white">
+              Localizaciones
+            </h2>
 
-        <p className="mt-4 max-w-3xl text-lg leading-8 text-slate-300">
-          Explora los principales lugares del mundo de campaña: reinos, bosques,
-          mares, lagos, ciudades y poblados con su clima, descripción y nivel de
-          peligro.
-        </p>
+            <p className="mt-4 max-w-3xl text-lg leading-8 text-slate-300">
+              Explora los principales lugares del mundo de campaña: reinos,
+              bosques, mares, lagos, ciudades y poblados con su clima,
+              descripción y nivel de peligro.
+            </p>
+          </div>
+
+          <Link
+            to="/locations/new"
+            className="inline-flex rounded-full border border-emerald-400/30 bg-emerald-400/10 px-4 py-2 text-sm font-medium text-emerald-300 transition hover:bg-emerald-400/20"
+          >
+            + Nueva localización
+          </Link>
+        </div>
       </div>
 
       <div className="grid gap-4 lg:grid-cols-[1fr_auto] lg:items-end">
@@ -52,6 +66,20 @@ function LocationsPage() {
         </div>
       </div>
 
+      {!isLoading && !error && (
+        <div className="rounded-2xl border border-white/10 bg-slate-900/40 px-5 py-3">
+          <p className="text-sm text-slate-300">
+            Mostrando{' '}
+            <span className="font-semibold text-white">
+              {filteredLocations.length}
+            </span>{' '}
+            de{' '}
+            <span className="font-semibold text-white">{totalLocations}</span>{' '}
+            localizaciones
+          </p>
+        </div>
+      )}
+
       {isLoading ? (
         <div className="rounded-3xl border border-white/10 bg-slate-900/40 p-10 text-center">
           <h3 className="text-2xl font-semibold text-white">
@@ -71,7 +99,13 @@ function LocationsPage() {
       ) : filteredLocations.length > 0 ? (
         <div className="grid gap-6 xl:grid-cols-2">
           {filteredLocations.map((location) => (
-            <LocationCard key={location.id} location={location} />
+            <Link
+              key={location.id}
+              to={`/locations/${location.id}`}
+              className="block rounded-3xl outline-none transition focus-visible:ring-2 focus-visible:ring-cyan-400/60"
+            >
+              <LocationCard location={location} />
+            </Link>
           ))}
         </div>
       ) : (

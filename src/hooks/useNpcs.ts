@@ -6,6 +6,7 @@ import type { Npc } from '../types/npc'
 
 interface NpcWithLocation {
   npc: Npc
+  location?: Location
   locationName: string
 }
 
@@ -72,6 +73,7 @@ export function useNpcs(): UseNpcsReturn {
 
         return {
           npc,
+          location,
           locationName: location?.name ?? 'Sin localización',
         }
       })

@@ -6,6 +6,7 @@ import type { Location } from '../types/location'
 
 interface EventWithLocation {
   event: HistoricalEvent
+  location?: Location
   locationName: string
 }
 
@@ -74,6 +75,7 @@ export function useHistoricalEvents(): UseHistoricalEventsReturn {
 
         return {
           event,
+          location,
           locationName: location?.name ?? 'Sin localización',
         }
       })

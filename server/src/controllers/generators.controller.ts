@@ -5,9 +5,33 @@ import {
   getRandomTreasure,
 } from '../services/generators.service.ts'
 
-export function handleGetRandomEvent(_req: Request, res: Response, next: NextFunction) {
+function getGeneratorContext(req: Request) {
+  const location =
+    typeof req.query.location === 'string' ? req.query.location : undefined
+
+  const npcQuery =
+    typeof req.query.npcs === 'string' ? req.query.npcs : undefined
+
+  const npcs = npcQuery
+    ? npcQuery
+        .split(',')
+        .map((npc) => npc.trim())
+        .filter(Boolean)
+    : undefined
+
+  return {
+    location,
+    npcs,
+  }
+}
+
+export function handleGetRandomEvent(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
   try {
-    const data = getRandomEvent()
+    const data = getRandomEvent(getGeneratorContext(req))
 
     res.status(200).json({
       success: true,
@@ -18,9 +42,13 @@ export function handleGetRandomEvent(_req: Request, res: Response, next: NextFun
   }
 }
 
-export function handleGetRandomEncounter(_req: Request, res: Response, next: NextFunction) {
+export function handleGetRandomEncounter(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
   try {
-    const data = getRandomEncounter()
+    const data = getRandomEncounter(getGeneratorContext(req))
 
     res.status(200).json({
       success: true,
@@ -31,9 +59,13 @@ export function handleGetRandomEncounter(_req: Request, res: Response, next: Nex
   }
 }
 
-export function handleGetRandomTreasure(_req: Request, res: Response, next: NextFunction) {
+export function handleGetRandomTreasure(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
   try {
-    const data = getRandomTreasure()
+    const data = getRandomTreasure(getGeneratorContext(req))
 
     res.status(200).json({
       success: true,

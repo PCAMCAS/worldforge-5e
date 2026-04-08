@@ -1,5 +1,4 @@
 import NpcCard from '../components/NpcCard'
-import { mockLocations } from '../data/mockLocations'
 import { useNpcs } from '../hooks/useNpcs'
 
 function NpcsPage() {
@@ -46,6 +45,19 @@ function NpcsPage() {
         </div>
       </div>
 
+      {!isLoading && !error && (
+        <div className="rounded-2xl border border-white/10 bg-slate-900/40 px-5 py-3">
+          <p className="text-sm text-slate-300">
+            Mostrando{' '}
+            <span className="font-semibold text-white">
+              {filteredNpcs.length}
+            </span>{' '}
+            de <span className="font-semibold text-white">{totalNpcs}</span>{' '}
+            NPCs
+          </p>
+        </div>
+      )}
+
       {isLoading ? (
         <div className="rounded-3xl border border-white/10 bg-slate-900/40 p-10 text-center">
           <h3 className="text-2xl font-semibold text-white">Cargando NPCs...</h3>
@@ -62,11 +74,9 @@ function NpcsPage() {
         </div>
       ) : filteredNpcs.length > 0 ? (
         <div className="grid gap-6 xl:grid-cols-2">
-          {filteredNpcs.map(({ npc }) => {
-            const location = mockLocations.find((item) => item.id === npc.locationId)
-
-            return <NpcCard key={npc.id} npc={npc} location={location} />
-          })}
+          {filteredNpcs.map(({ npc, location }) => (
+            <NpcCard key={npc.id} npc={npc} location={location} />
+          ))}
         </div>
       ) : (
         <div className="rounded-3xl border border-dashed border-white/15 bg-slate-900/40 p-10 text-center">

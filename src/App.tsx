@@ -1,6 +1,8 @@
 import { NavLink, Route, Routes } from 'react-router'
 import HomePage from './pages/HomePage'
 import LocationsPage from './pages/LocationsPage'
+import LocationDetailPage from './pages/LocationDetailPage'
+import NewLocationPage from './pages/NewLocationPage'
 import NpcsPage from './pages/NpcsPage'
 import EventsPage from './pages/EventsPage'
 import GeneratorsPage from './pages/GeneratorsPage'
@@ -10,8 +12,8 @@ const navLinkClass = ({ isActive }: { isActive: boolean }) =>
   [
     'rounded-full px-4 py-2 text-sm font-medium transition',
     isActive
-      ? 'bg-cyan-400/15 text-cyan-300 border border-cyan-400/30'
-      : 'text-slate-300 hover:bg-white/5 hover:text-white border border-transparent',
+      ? 'border border-cyan-400/30 bg-cyan-400/15 text-cyan-300'
+      : 'border border-transparent text-slate-300 hover:bg-white/5 hover:text-white',
   ].join(' ')
 
 function App() {
@@ -52,6 +54,8 @@ function App() {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/locations" element={<LocationsPage />} />
+          <Route path="/locations/new" element={<NewLocationPage />} />
+          <Route path="/locations/:id" element={<LocationDetailPage />} />
           <Route path="/npcs" element={<NpcsPage />} />
           <Route path="/events" element={<EventsPage />} />
           <Route path="/generators" element={<GeneratorsPage />} />
