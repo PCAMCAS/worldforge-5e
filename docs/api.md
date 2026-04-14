@@ -6,29 +6,39 @@ http://localhost:3000/api/v1
 
 ---
 
-## Estructura de respuesta
+## Estructura general de respuesta
 
-Todas las respuestas siguen este formato:
+Todas las respuestas de la API siguen una estructura común.
+
+### Respuesta correcta
 
 ```json
 {
   "success": true,
-  "data": ...
+  "data": {}
 }
+```
 
-### En caso de error:
+### Respuesta de error
 
+```json
 {
   "success": false,
   "message": "Descripción del error"
 }
+```
+
+---
 
 ## Endpoints
 
 ### GET /locations
+
 Obtiene todas las localizaciones del mundo.
 
-### Response
+#### Response
+
+```json
 {
   "success": true,
   "data": [
@@ -42,11 +52,75 @@ Obtiene todas las localizaciones del mundo.
     }
   ]
 }
+```
 
-## GET /npcs
+---
+
+### POST /locations
+
+Crea una nueva localización.
+
+#### Body
+
+```json
+{
+  "name": "Torre de las Mareas",
+  "type": "city",
+  "description": "Una torre costera mágica...",
+  "climate": "marítimo",
+  "dangerLevel": 6
+}
+```
+
+#### Response
+
+```json
+{
+  "success": true,
+  "data": {
+    "id": "uuid",
+    "name": "Torre de las Mareas",
+    "type": "city",
+    "description": "Una torre costera mágica...",
+    "climate": "marítimo",
+    "dangerLevel": 6
+  }
+}
+```
+
+---
+
+### PATCH /locations/:id
+
+Actualiza una localización.
+
+#### Body
+
+```json
+{
+  "name": "Nuevo nombre",
+  "type": "city",
+  "description": "Nueva descripción",
+  "climate": "frío",
+  "dangerLevel": 7
+}
+```
+
+---
+
+### DELETE /locations/:id
+
+Elimina una localización.
+
+---
+
+### GET /npcs
+
 Obtiene todos los NPCs.
 
-### Response
+#### Response
+
+```json
 {
   "success": true,
   "data": [
@@ -54,16 +128,22 @@ Obtiene todos los NPCs.
       "id": "1",
       "name": "Arthos el Sabio",
       "race": "Humano",
-      "role": "Mago de la corte",
+      "role": "Mago",
       "locationId": "1"
     }
   ]
 }
+```
 
-## GET /events
-Obtiene los eventos históricos.
+---
 
-### Response
+### GET /events
+
+Obtiene eventos históricos.
+
+#### Response
+
+```json
 {
   "success": true,
   "data": [
@@ -75,29 +155,58 @@ Obtiene los eventos históricos.
     }
   ]
 }
+```
 
-## GET /generators/random-event
+---
 
-### Devuelve un evento aleatorio.
+### GET /generators/random-event
+
+Genera un evento aleatorio.
+
+#### Response
+
+```json
 {
   "success": true,
   "data": {
     "type": "event",
-    "result": "Una tormenta arcana..."
+    "title": "Evento arcano",
+    "result": "Una tormenta mágica...",
+    "location": "Bosque",
+    "npc": "NPC aleatorio",
+    "dangerLevel": 5,
+    "cursed": false,
+    "rewardOrConsequence": "Descubres un secreto oculto"
   }
 }
+```
 
-## GET /generators/random-encounter
+---
 
-Devuelve un encuentro aleatorio.
+### GET /generators/random-encounter
 
-## GET /generators/random-treasure
+Genera un encuentro aleatorio.
 
-Devuelve un tesoro aleatorio.
+---
+
+### GET /generators/random-treasure
+
+Genera un tesoro aleatorio.
+
+---
 
 ## Códigos HTTP
-200 OK → petición correcta
-400 Bad Request → datos inválidos
-404 Not Found → recurso no encontrado
-500 Internal Server Error → error del servidor
 
+* 200 OK → petición correcta
+* 201 Created → recurso creado
+* 400 Bad Request → datos inválidos
+* 404 Not Found → recurso no encontrado
+* 500 Internal Server Error → error del servidor
+
+---
+
+## Notas
+
+* Arquitectura por capas: rutas, controladores, servicios
+* Datos en memoria (no persistentes)
+* Generadores con contexto opcional (location + npcs)

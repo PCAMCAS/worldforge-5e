@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { generateEncounter, generateEvent, generateTreasure } from '../api/events'
+import { useNotification } from '../context/NotificationContext'
 
 interface GeneratorResult {
   type: 'event' | 'encounter' | 'treasure'
@@ -20,6 +21,8 @@ interface SavedGeneratorResult extends GeneratorResult {
 const STORAGE_KEY = 'worldforge-generator-history'
 
 function GeneratorsPage() {
+  const { showNotification } = useNotification()
+
   const [result, setResult] = useState<GeneratorResult | null>(null)
   const [history, setHistory] = useState<SavedGeneratorResult[]>([])
   const [isHydrated, setIsHydrated] = useState(false)
@@ -66,12 +69,13 @@ function GeneratorsPage() {
       }
 
       setResult(data)
+      showNotification('Contenido generado correctamente')
     } catch (err) {
-      setError(
-        err instanceof Error
-          ? err.message
-          : 'No se pudo generar el contenido.',
-      )
+      const message =
+        err instanceof Error ? err.message : 'No se pudo generar el contenido.'
+
+      setError(message)
+      showNotification('Error al generar contenido', 'error')
     } finally {
       setIsLoading(false)
     }
@@ -91,6 +95,7 @@ function GeneratorsPage() {
 
     if (alreadySaved) {
       setSaveMessage('Ese resultado ya está guardado en el historial.')
+      showNotification('Ese resultado ya estaba guardado', 'error')
       return
     }
 
@@ -102,17 +107,20 @@ function GeneratorsPage() {
 
     setHistory((prevHistory) => [newSavedResult, ...prevHistory])
     setSaveMessage('Resultado guardado en el historial.')
+    showNotification('Resultado guardado en el historial')
   }
 
   function handleDeleteSavedResult(id: string) {
     setHistory((prevHistory) =>
       prevHistory.filter((savedResult) => savedResult.id !== id),
     )
+    showNotification('Resultado eliminado del historial')
   }
 
   function handleClearHistory() {
     setHistory([])
     setSaveMessage('')
+    showNotification('Historial limpiado correctamente')
   }
 
   return (

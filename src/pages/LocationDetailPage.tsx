@@ -1,5 +1,5 @@
 import { Link, useNavigate, useParams } from 'react-router'
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import {
   deleteLocation,
   updateLocation,
@@ -11,6 +11,7 @@ import {
   generateTreasureForLocation,
   type GeneratorResponse,
 } from '../api/events'
+import { useNotification } from '../context/NotificationContext'
 import { useHistoricalEvents } from '../hooks/useHistoricalEvents'
 import { useLocations } from '../hooks/useLocations'
 import { useNpcs } from '../hooks/useNpcs'
@@ -19,6 +20,7 @@ import type { LocationType } from '../types/location'
 function LocationDetailPage() {
   const { id } = useParams()
   const navigate = useNavigate()
+  const { showNotification } = useNotification()
 
   const {
     locations,
@@ -84,39 +86,42 @@ function LocationDetailPage() {
     })
   }, [location])
 
-  async function handleContextGeneration(
-    type: 'event' | 'encounter' | 'treasure',
-  ) {
-    if (!location) return
+  const handleContextGeneration = useCallback(
+    async (type: 'event' | 'encounter' | 'treasure') => {
+      if (!location) return
 
-    try {
-      setIsGenerating(true)
-      setGeneratorError('')
-      setGeneratedResult(null)
+      try {
+        setIsGenerating(true)
+        setGeneratorError('')
+        setGeneratedResult(null)
 
-      const npcNames = locationNpcs.map((npc) => npc.name)
+        const npcNames = locationNpcs.map((npc) => npc.name)
 
-      let data: GeneratorResponse
+        let data: GeneratorResponse
 
-      if (type === 'event') {
-        data = await generateEventForLocation(location.name, npcNames)
-      } else if (type === 'encounter') {
-        data = await generateEncounterForLocation(location.name, npcNames)
-      } else {
-        data = await generateTreasureForLocation(location.name, npcNames)
+        if (type === 'event') {
+          data = await generateEventForLocation(location.name, npcNames)
+        } else if (type === 'encounter') {
+          data = await generateEncounterForLocation(location.name, npcNames)
+        } else {
+          data = await generateTreasureForLocation(location.name, npcNames)
+        }
+
+        setGeneratedResult(data)
+        showNotification(`Contenido contextual generado en ${location.name}`)
+      } catch (err) {
+        setGeneratorError(
+          err instanceof Error
+            ? err.message
+            : 'No se pudo generar contenido contextual.',
+        )
+        showNotification('Error al generar contenido contextual', 'error')
+      } finally {
+        setIsGenerating(false)
       }
-
-      setGeneratedResult(data)
-    } catch (err) {
-      setGeneratorError(
-        err instanceof Error
-          ? err.message
-          : 'No se pudo generar contenido contextual.',
-      )
-    } finally {
-      setIsGenerating(false)
-    }
-  }
+    },
+    [location, locationNpcs, showNotification],
+  )
 
   function validateForm() {
     if (formValues.name.trim().length < 3) {
@@ -147,6 +152,7 @@ function LocationDetailPage() {
 
     if (validationError) {
       setEditError(validationError)
+      showNotification(validationError, 'error')
       return
     }
 
@@ -163,13 +169,16 @@ function LocationDetailPage() {
       })
 
       setIsEditing(false)
+      showNotification('Localización actualizada correctamente')
       window.location.reload()
     } catch (err) {
-      setEditError(
+      const message =
         err instanceof Error
           ? err.message
-          : 'No se pudo actualizar la localización.',
-      )
+          : 'No se pudo actualizar la localización.'
+
+      setEditError(message)
+      showNotification('Error al actualizar la localización', 'error')
     } finally {
       setIsSaving(false)
     }
@@ -183,13 +192,16 @@ function LocationDetailPage() {
       setDeleteError('')
 
       await deleteLocation(id)
+      showNotification('La localización ha sido borrada del mundo')
       navigate('/locations')
     } catch (err) {
-      setDeleteError(
+      const message =
         err instanceof Error
           ? err.message
-          : 'No se pudo eliminar la localización.',
-      )
+          : 'No se pudo eliminar la localización.'
+
+      setDeleteError(message)
+      showNotification('Error al eliminar la localización', 'error')
     } finally {
       setIsDeleting(false)
     }

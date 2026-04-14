@@ -2,9 +2,9 @@
 
 ## Introducción
 
-En WorldForge 5e se ha utilizado el sistema de hooks de React para gestionar el estado de la aplicación, manejar efectos secundarios y optimizar el rendimiento.
+En WorldForge 5e se utiliza el sistema de hooks de React para gestionar el estado, manejar efectos secundarios y organizar la lógica de datos.
 
-Además de los hooks nativos de React, se han creado custom hooks para encapsular la lógica de acceso a datos y mantener los componentes limpios y reutilizables.
+Además de los hooks nativos, se han creado custom hooks para separar la lógica de la UI y mantener los componentes limpios.
 
 ---
 
@@ -12,26 +12,30 @@ Además de los hooks nativos de React, se han creado custom hooks para encapsula
 
 ### useState
 
-Se utiliza para gestionar el estado local de los componentes y hooks.
+Se utiliza para gestionar estado local.
 
-Ejemplos de uso:
+Casos de uso:
 
-- almacenar listas de datos (localizaciones, NPCs, eventos)
-- controlar el valor de los inputs de búsqueda
-- gestionar estados de carga (`isLoading`)
-- almacenar errores (`error`)
+* listas de datos (locations, npcs, events)
+* inputs de búsqueda
+* estados de carga (`isLoading`)
+* errores (`error`)
 
 Ejemplo:
 
 ```ts
 const [search, setSearch] = useState('')
+```
+
+---
 
 ### useEffect
 
-Se utiliza para ejecutar efectos secundarios, principalmente para cargar datos desde la API cuando el componente se monta.
+Se utiliza para ejecutar efectos secundarios, principalmente llamadas a la API al montar el componente.
 
 Ejemplo:
 
+```ts
 useEffect(() => {
   async function loadData() {
     const data = await getLocations()
@@ -40,99 +44,114 @@ useEffect(() => {
 
   loadData()
 }, [])
+```
 
-También se utiliza una bandera isMounted para evitar actualizar el estado si el componente se desmonta antes de que termine la petición.
+También se puede usar una bandera (`isMounted`) para evitar actualizar estado tras desmontar el componente.
+
+---
 
 ### useMemo
 
-Se utiliza para optimizar cálculos que pueden ser costosos, como el filtrado de listas.
-
-En lugar de recalcular en cada render, solo se recalcula cuando cambian las dependencias.
+Se utiliza para optimizar cálculos como filtros de listas.
 
 Ejemplo:
 
+```ts
 const filteredLocations = useMemo(() => {
   return locations.filter((location) =>
-    location.name.toLowerCase().includes(search.toLowerCase()),
+    location.name.toLowerCase().includes(search.toLowerCase())
   )
 }, [locations, search])
+```
 
-Esto mejora el rendimiento en listas grandes.
+Evita recalcular en cada render.
+
+---
 
 ### useCallback
 
-En esta versión del proyecto no ha sido necesario utilizar useCallback, ya que no existen funciones que se pasen como props a múltiples componentes generando renders innecesarios.
+En este proyecto no ha sido necesario utilizar `useCallback`.
 
-Sin embargo, se podría incorporar en futuras versiones para optimizar componentes más complejos.
+No existen funciones que se pasen como props y generen renders innecesarios.
+
+Se podría aplicar en el futuro si la app crece en complejidad.
+
+---
 
 ## Custom hooks
 
-Para separar la lógica de datos de la UI, se han creado varios hooks personalizados.
+Se han creado hooks personalizados para encapsular la lógica de datos.
+
+---
 
 ### useLocations
 
 Responsabilidades:
 
 * cargar localizaciones desde la API
-* gestionar estado de carga y error
+* gestionar loading y error
 * aplicar filtro de búsqueda
-* devolver datos listos para renderizar
+* devolver datos listos para UI
 
-useNpcs
+---
 
-### Responsabilidades:
+### useNpcs
+
+Responsabilidades:
 
 * cargar NPCs y localizaciones
-* combinar datos mediante locationId
-* gestionar búsqueda
-* devolver NPCs enriquecidos con el nombre de su localización
+* relacionarlos mediante `locationId`
+* aplicar búsqueda
+* devolver NPCs enriquecidos
+
+---
 
 ### useHistoricalEvents
 
 Responsabilidades:
 
-* cargar eventos históricos y localizaciones
-* relacionar eventos con su ubicación
-* aplicar filtros de búsqueda
+* cargar eventos y localizaciones
+* relacionarlos
+* aplicar filtros
 * gestionar estados de red
 
-### Ventajas de usar custom hooks
+---
 
-El uso de custom hooks aporta varias ventajas:
+## Ventajas de los custom hooks
 
-* separa la lógica de negocio de los componentes visuales
-* evita duplicar código
-* mejora la legibilidad del código
-* facilita el testing
-* permite reutilizar lógica en múltiples páginas
+* separan lógica de UI
+* evitan duplicación
+* mejoran legibilidad
+* facilitan mantenimiento
+* permiten reutilización
 
-Gracias a esto, las páginas (pages/) se centran únicamente en renderizar la UI.
+Las páginas (`pages/`) solo se encargan de renderizar.
 
-## Gestión de estados de red
+---
 
-Cada custom hook gestiona tres estados clave:
+## Estados de red
+
+Cada hook gestiona:
 
 ### loading
 
-Indica que la petición está en curso.
+La petición está en curso.
 
 ### success
 
-Los datos se han cargado correctamente.
+Datos cargados correctamente.
 
 ### error
 
-Ha ocurrido un problema al obtener los datos.
+Error al obtener datos.
 
-Este patrón mejora la experiencia de usuario y hace que la aplicación sea más robusta.
+---
 
 ## Conclusión
 
-El uso de hooks en WorldForge 5e permite construir una aplicación modular y mantenible.
+El uso de hooks permite una arquitectura clara y mantenible:
 
-La combinación de:
+* hooks nativos → estado y efectos
+* custom hooks → lógica de negocio
 
-* hooks nativos (useState, useEffect, useMemo)
-* custom hooks especializados
-
-permite mantener una separación clara entre lógica y presentación, lo que facilita el crecimiento del proyecto en futuras versiones.
+Esto facilita escalar la aplicación sin complicar los componentes.

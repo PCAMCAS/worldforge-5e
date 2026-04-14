@@ -4,187 +4,202 @@
 
 WorldForge 5e es una aplicación fullstack diseñada para ayudar a Dungeon Masters de Dungeons & Dragons 5e a gestionar la información de su mundo de campaña.
 
-La aplicación permite consultar y organizar localizaciones, NPCs y eventos históricos, además de incluir generadores aleatorios para ayudar a improvisar durante las sesiones.
+Permite consultar y organizar localizaciones, NPCs y eventos históricos, además de incluir generadores aleatorios para apoyar la improvisación durante las sesiones.
 
-Desde el punto de vista técnico, el proyecto se ha construido con una separación clara entre frontend y backend:
+Tecnologías utilizadas:
 
-- Frontend en React + TypeScript + Tailwind CSS
-- Backend en Node.js + Express
-- Comunicación mediante una API REST
-- Tipado fuerte en toda la aplicación
+* Frontend: React + TypeScript + Tailwind CSS
+* Backend: Node.js + Express
+* Comunicación: API REST
+* Tipado fuerte en toda la aplicación
 
 ---
 
 ## Arquitectura general
 
-La arquitectura sigue un modelo cliente-servidor.
+La aplicación sigue un modelo cliente-servidor.
 
 ### Frontend
-El frontend es responsable de:
-- renderizar la interfaz
-- gestionar navegación y rutas
-- recoger interacción del usuario
-- consultar la API
-- mostrar estados de carga, éxito y error
+
+Responsabilidades:
+
+* renderizar la interfaz
+* gestionar navegación y rutas
+* manejar la interacción del usuario
+* consumir la API
+* mostrar estados de carga, éxito y error
+
+---
 
 ### Backend
-El backend es responsable de:
-- exponer endpoints REST
-- centralizar la lógica de negocio
-- devolver datos con formato consistente
-- actuar como fuente de verdad para los recursos del mundo
+
+Responsabilidades:
+
+* exponer endpoints REST
+* centralizar la lógica de negocio
+* devolver datos con formato consistente
+* actuar como fuente de verdad
 
 ---
 
 ## Flujo de datos
 
-El flujo de datos principal de la aplicación es el siguiente:
-
-1. El usuario navega por la interfaz
-2. Un componente de página utiliza un custom hook
-3. El hook llama a una función del cliente API
-4. La función realiza una petición HTTP al backend
-5. El backend resuelve la petición a través de rutas, controladores y servicios
-6. El backend devuelve una respuesta JSON tipada
+1. El usuario interactúa con la interfaz
+2. Un componente utiliza un custom hook
+3. El hook llama al cliente API
+4. Se realiza una petición HTTP al backend
+5. El backend procesa la solicitud (routes → controllers → services)
+6. Se devuelve una respuesta JSON
 7. El hook actualiza el estado
-8. La UI se renderiza con los datos recibidos
+8. La UI se renderiza con los datos
 
-Este flujo mantiene separadas las responsabilidades y facilita la escalabilidad del proyecto.
+Este flujo separa responsabilidades y mejora la escalabilidad.
 
 ---
 
 ## Estructura del frontend
 
-El frontend se ha organizado en carpetas según su responsabilidad:
+Organización por responsabilidades:
 
-- `src/api/`: funciones de acceso a la API
-- `src/components/`: componentes reutilizables
-- `src/hooks/`: hooks personalizados y lógica reutilizable
-- `src/pages/`: páginas principales de la aplicación
-- `src/types/`: tipos e interfaces TypeScript
-- `src/context/`: reservado para estado global
-- `src/utils/`: funciones auxiliares
-
-Esta organización hace que cada parte del frontend tenga un propósito claro.
+* `src/api/` → comunicación con backend
+* `src/components/` → componentes reutilizables
+* `src/hooks/` → lógica reutilizable
+* `src/pages/` → páginas principales
+* `src/types/` → tipos TypeScript
+* `src/context/` → estado global (preparado)
+* `src/utils/` → utilidades
 
 ---
 
 ## Estructura del backend
 
-El backend se ha organizado siguiendo arquitectura por capas:
+Arquitectura por capas:
 
-- `server/src/routes/`: definición de endpoints
-- `server/src/controllers/`: manejo de petición y respuesta HTTP
-- `server/src/services/`: lógica de negocio
-- `server/src/data/`: datos utilizados por la API
-- `server/src/config/`: configuración del servidor
-- `server/src/middleware/`: middleware reutilizable
-- `server/src/models/`: reservado para modelos y contratos
-
-### Responsabilidad de cada capa
-
-#### Routes
-Definen las rutas disponibles de la API y conectan cada endpoint con su controlador.
-
-#### Controllers
-Reciben la petición HTTP, llaman al servicio adecuado y devuelven la respuesta con el código correspondiente.
-
-#### Services
-Contienen la lógica de acceso y transformación de datos.
-
-#### Data
-En esta primera versión, los datos se almacenan en estructuras simples dentro del backend, actuando como fuente de verdad.
+* `server/src/routes/` → endpoints
+* `server/src/controllers/` → gestión HTTP
+* `server/src/services/` → lógica de negocio
+* `server/src/data/` → datos
+* `server/src/config/` → configuración
+* `server/src/middleware/` → middleware
+* `server/src/models/` → modelos (futuro)
 
 ---
 
-## Recursos principales del dominio
+## Responsabilidad de cada capa
 
-En la versión actual de la aplicación se han modelado tres recursos principales:
+### Routes
+
+Definen endpoints y conectan con controladores.
+
+### Controllers
+
+Gestionan request/response y códigos HTTP.
+
+### Services
+
+Contienen la lógica de negocio.
+
+### Data
+
+Almacenan los datos (mock en esta versión).
+
+---
+
+## Recursos del dominio
 
 ### Localizaciones
-Representan lugares del mundo como reinos, bosques, lagos, mares, ciudades o poblados.
+
+* reinos
+* ciudades
+* bosques
+* lagos
+* mares
+
+---
 
 ### NPCs
-Representan personajes no jugadores del mundo y se asocian a una localización mediante `locationId`.
+
+* personajes no jugadores
+* vinculados a una localización mediante `locationId`
+
+---
 
 ### Eventos históricos
-Representan hechos relevantes del lore y también se asocian a una localización mediante `locationId`.
 
-Además, la API incluye generadores aleatorios para:
-- eventos
-- encuentros
-- tesoros
+* sucesos del lore
+* vinculados a localizaciones
+
+---
+
+### Generadores
+
+* eventos
+* encuentros
+* tesoros
 
 ---
 
 ## Componentes principales
 
-Se han definido varios componentes reutilizables para representar la información del dominio:
+* `LocationCard`
+* `NpcCard`
+* `HistoricalEventCard`
 
-- `LocationCard`
-- `NpcCard`
-- `HistoricalEventCard`
+Características:
 
-Cada uno de ellos recibe props tipadas y se encarga únicamente de representar datos.
-
-De esta forma:
-- la lógica queda en hooks o páginas
-- la presentación queda en componentes reutilizables
+* props tipadas
+* sin lógica de negocio
+* reutilizables
 
 ---
 
 ## Gestión de estado
 
-La aplicación utiliza principalmente estado local mediante hooks de React:
+Hooks utilizados:
 
-- `useState` para estado de datos, búsqueda, carga y error
-- `useEffect` para cargar datos desde la API
-- `useMemo` para filtrar listas y evitar cálculos innecesarios
+* `useState` → estado local
+* `useEffect` → carga de datos
+* `useMemo` → optimización
 
-También se han creado custom hooks para encapsular la lógica de datos:
+Custom hooks:
 
-- `useLocations`
-- `useNpcs`
-- `useHistoricalEvents`
+* `useLocations`
+* `useNpcs`
+* `useHistoricalEvents`
 
-Esto permite reutilizar lógica y mantener las páginas más limpias.
+Esto separa lógica y presentación.
 
 ---
 
 ## Estado global
 
-En esta versión del proyecto no se ha necesitado un estado global complejo, ya que los datos se cargan por recurso y se consumen localmente en cada vista.
+No se ha utilizado Context API en esta versión.
 
-Aun así, se dejó preparada la carpeta `context/` para futuras ampliaciones, por ejemplo:
-- localización seleccionada
-- filtros compartidos
-- preferencias globales del usuario
-- estado de autenticación en versiones futuras
+Motivo:
+
+* no hay necesidad real
+* cada recurso es independiente
+
+Preparado para futuras mejoras en `context/`.
 
 ---
 
 ## Navegación y rutas
 
-La aplicación utiliza React Router para gestionar la navegación entre páginas.
+Implementadas con React Router:
 
-Las rutas principales son:
-
-- `/` → dashboard principal
-- `/locations` → listado de localizaciones
-- `/npcs` → listado de NPCs
-- `/events` → listado de eventos históricos
-- `/generators` → generadores aleatorios
-- `*` → página 404
-
-Este esquema permite separar claramente las secciones funcionales de la aplicación.
+* `/` → dashboard
+* `/locations` → localizaciones
+* `/npcs` → NPCs
+* `/events` → eventos
+* `/generators` → generadores
+* `*` → 404
 
 ---
 
 ## Contrato de datos
 
-El frontend y el backend comparten un contrato de datos consistente gracias al uso de TypeScript.
-
-Se ha definido también una respuesta genérica:
+Tipo común:
 
 ```ts
 export interface ApiResponse<T> {
@@ -192,61 +207,86 @@ export interface ApiResponse<T> {
   data: T
   message?: string
 }
+```
 
-Esto garantiza coherencia entre capas y simplifica el consumo de la API.
+Esto garantiza coherencia entre frontend y backend.
+
+---
 
 ## Persistencia de datos
 
-En esta primera versión, los datos viven en el backend y no en LocalStorage. Esto permite que la API actúe como fuente de verdad, cumpliendo uno de los requisitos del ejercicio.
+Actualmente:
 
-Aunque todavía no se ha incorporado una base de datos real, la estructura del backend está preparada para sustituir fácilmente la capa data/ por una persistencia más avanzada en el futuro.
+* los datos viven en el backend
+* la API es la fuente de verdad
 
-## Decisiones de diseño más importantes
+No hay base de datos real todavía, pero la arquitectura lo permite fácilmente.
 
-Durante el desarrollo se tomaron varias decisiones clave:
+---
 
-### 1. Reducir el alcance a una MVP clara
+## Decisiones clave
 
-En lugar de intentar crear un gestor de campaña enorme, se priorizó una primera versión centrada en localizaciones, NPCs y eventos.
+### MVP claro
 
-### 2. Construir el backend antes de integrar completamente el frontend
+Se priorizó simplicidad:
 
-Esto permitió definir bien los contratos de datos y evitar rehacer componentes al conectar la API.
+* localizaciones
+* NPCs
+* eventos
 
-### 3. Usar custom hooks para separar lógica y presentación
+---
 
-La carga de datos, los errores y los filtros no están mezclados con el renderizado visual.
+### Backend primero
 
-### 4. Mantener un diseño visual claro pero no excesivamente complejo
+Se definió la API antes de integrar completamente el frontend.
 
-Se priorizó una interfaz limpia y legible, funcional para demostrar la arquitectura del proyecto.
+---
 
-## Posibles mejoras futuras
+### Uso de custom hooks
 
-La arquitectura actual permitiría incorporar fácilmente:
+Separación clara entre:
 
-* creación y edición de recursos mediante formularios conectados a POST y PATCH
-* borrado de recursos
-* autenticación de usuarios
+* lógica
+* UI
+
+---
+
+### Diseño visual sencillo
+
+Interfaz limpia y funcional.
+
+---
+
+## Mejoras futuras
+
+* formularios completos (POST, PATCH)
+* eliminación de recursos (ya implementado parcialmente)
+* autenticación
 * base de datos real
 * múltiples campañas
-* relaciones más complejas entre entidades
-* panel de administración
+* relaciones avanzadas
+* panel admin
 * mapa interactivo
-* estado global con Context API
+* estado global
+* animaciones
+
+---
 
 ## Conclusión
 
-La arquitectura de WorldForge 5e se ha diseñado para ser clara, modular y escalable.
+WorldForge 5e presenta una arquitectura:
 
-Aunque se trata de una primera versión reducida, la aplicación ya demuestra:
+* modular
+* escalable
+* mantenible
 
-separación entre frontend y backend
-organización por capas en el servidor
-cliente de API tipado
-componentes reutilizables
-hooks personalizados
-navegación estructurada
-base técnica sólida para futuras ampliaciones
+Incluye:
 
-Esto permite que el proyecto no solo funcione, sino que además esté construido con una lógica de desarrollo profesional y mantenible.
+* separación frontend/backend
+* backend por capas
+* cliente API tipado
+* componentes reutilizables
+* hooks personalizados
+* navegación estructurada
+
+Esto proporciona una base sólida para evolucionar el proyecto a nivel profesional.

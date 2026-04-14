@@ -4,74 +4,75 @@
 
 React proporciona la Context API como una forma de compartir estado global entre componentes sin necesidad de pasar props manualmente a través de múltiples niveles (prop drilling).
 
-En aplicaciones grandes, esto permite centralizar información que debe ser accesible desde diferentes partes de la interfaz.
+Esto permite centralizar información accesible desde diferentes partes de la aplicación.
 
 ---
 
 ## Uso en este proyecto
 
-En la versión actual de WorldForge 5e no se ha implementado un estado global complejo mediante Context API.
+En WorldForge 5e no se ha implementado un estado global complejo mediante Context API.
 
-Esto se debe a que:
+Motivos:
 
-- los datos están claramente separados por recursos (localizaciones, NPCs, eventos)
-- cada página gestiona su propio estado mediante custom hooks
-- no existe una necesidad real de compartir estado entre múltiples vistas
+* los datos están separados por recursos (localizaciones, NPCs, eventos)
+* cada página gestiona su propio estado con custom hooks
+* no existe necesidad real de compartir estado entre vistas
 
 ---
 
 ## Alternativa utilizada
 
-En lugar de Context API, se ha optado por:
+En su lugar se ha optado por:
 
-- custom hooks (`useLocations`, `useNpcs`, `useHistoricalEvents`)
-- estado local con `useState`
-- carga de datos independiente por página
+* custom hooks (`useLocations`, `useNpcs`, `useHistoricalEvents`)
+* estado local con `useState`
+* carga independiente por página
 
-Este enfoque es más simple y suficiente para el alcance actual del proyecto.
-
----
-
-## Cuándo sería útil usar Context
-
-Aunque no se ha utilizado en esta versión, la Context API sería útil en escenarios como:
-
-### 1. Usuario autenticado
-Compartir información del usuario en toda la aplicación:
-- nombre
-- permisos
-- sesión
+Este enfoque es más simple y suficiente para el proyecto.
 
 ---
 
-### 2. Configuración global
-Por ejemplo:
-- tema (dark/light)
-- idioma
-- preferencias del usuario
+## Cuándo usar Context API
+
+Sería útil en escenarios como:
+
+### Usuario autenticado
+
+* nombre
+* permisos
+* sesión
 
 ---
 
-### 3. Estado compartido entre páginas
-Por ejemplo:
-- localización seleccionada globalmente
-- filtros persistentes
-- campaña activa
+### Configuración global
+
+* tema (dark/light)
+* idioma
+* preferencias
+
+---
+
+### Estado compartido
+
+* localización seleccionada
+* filtros persistentes
+* campaña activa
 
 ---
 
 ## Estructura preparada
 
-Aunque no se ha implementado, se ha preparado la carpeta:
+Se ha preparado la carpeta:
 
+```id="ctx1"
 src/context/
+```
 
+Esto permite añadir Context fácilmente en el futuro.
 
-Esto permite añadir fácilmente un contexto en el futuro sin reorganizar el proyecto.
+Ejemplo:
 
-Ejemplo de posible implementación:
-
-```ts
+```ts id="ctx2"
 const AppContext = createContext(null)
 
 export function AppProvider({ children }) {
@@ -83,29 +84,38 @@ export function AppProvider({ children }) {
     </AppContext.Provider>
   )
 }
+```
 
-### Ventajas de Context API
+---
+
+## Ventajas
+
 * evita prop drilling
 * centraliza estado global
-* mejora la organización en apps grandes
+* mejora organización
 
-### Desventajas
-* puede complicar la arquitectura si se usa en exceso
-* puede generar renders innecesarios si no se optimiza bien
-* no sustituye a soluciones más avanzadas en apps muy grandes
+---
 
-### Decisión de diseño
+## Desventajas
 
-Se decidió no usar Context API en esta primera versión para:
+* puede añadir complejidad innecesaria
+* puede generar renders extra
+* no sustituye soluciones más avanzadas en apps grandes
+
+---
+
+## Decisión de diseño
+
+Se decidió no usar Context API en esta versión para:
 
 * mantener la aplicación simple
-* evitar complejidad innecesaria
-* centrarse en la arquitectura API + hooks
+* evitar sobreingeniería
+* centrarse en API + hooks
 
-Esta decisión permite construir una base sólida sin sobreingeniería.
+---
 
-### Conclusión
+## Conclusión
 
-Aunque Context API es una herramienta potente, no siempre es necesaria.
+Context API es útil, pero no siempre necesaria.
 
-En WorldForge 5e se ha priorizado un enfoque más simple basado en hooks locales, dejando preparada la estructura para introducir estado global en futuras versiones si el proyecto lo requiere.
+En este proyecto se ha priorizado un enfoque simple con hooks, dejando preparada la estructura para futuras mejoras.
