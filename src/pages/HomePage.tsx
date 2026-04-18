@@ -18,7 +18,6 @@ function HomePage() {
   } = useNpcs()
 
   const {
-    events,
     totalEvents,
     isLoading: isLoadingEvents,
     error: eventsError,
@@ -51,9 +50,19 @@ function HomePage() {
     (location) => location.type === 'village',
   ).length
 
-  const humanNpcs = npcs.filter((npc) => npc.race.toLowerCase() === 'humano').length
-  const elfNpcs = npcs.filter((npc) => npc.race.toLowerCase() === 'elfa' || npc.race.toLowerCase() === 'elfo').length
-  const dwarfNpcs = npcs.filter((npc) => npc.race.toLowerCase() === 'enano').length
+  const humanNpcs = npcs.filter(
+    (npc) => npc.race.toLowerCase() === 'humano',
+  ).length
+
+  const elfNpcs = npcs.filter(
+    (npc) =>
+      npc.race.toLowerCase() === 'elfa' ||
+      npc.race.toLowerCase() === 'elfo',
+  ).length
+
+  const dwarfNpcs = npcs.filter(
+    (npc) => npc.race.toLowerCase() === 'enano',
+  ).length
 
   const averageDanger =
     locations.length > 0
