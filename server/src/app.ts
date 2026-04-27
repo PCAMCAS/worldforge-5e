@@ -8,9 +8,20 @@ import generatorsRouter from './routes/generators.routes'
 
 const app = express()
 
+const allowedOrigins = [
+  'http://localhost:5173',
+  'https://worldforge-5e.vercel.app',
+]
+
 app.use(
   cors({
-    origin: 'http://localhost:5173',
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true)
+      } else {
+        callback(new Error('Not allowed by CORS'))
+      }
+    },
   }),
 )
 
@@ -35,13 +46,20 @@ app.use((req, res) => {
   })
 })
 
-app.use((error: Error, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
-  console.error(error)
+app.use(
+  (
+    error: Error,
+    _req: express.Request,
+    res: express.Response,
+    _next: express.NextFunction,
+  ) => {
+    console.error(error)
 
-  res.status(500).json({
-    success: false,
-    message: 'Internal server error',
-  })
-})
+    res.status(500).json({
+      success: false,
+      message: 'Internal server error',
+    })
+  },
+)
 
 export default app
