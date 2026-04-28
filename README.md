@@ -28,8 +28,11 @@ Permite visualizar y organizar:
 
 El objetivo es ofrecer una herramienta moderna, rápida y escalable para el worldbuilding.
 
-![alt text](image.png)
+## 📸 Vista de la aplicación
 
+<p align="center">
+  <img src="docs/images/dashboard.png" alt="Dashboard WorldForge" width="100%" />
+</p>
 ---
 
 ## 🏗️ Arquitectura
