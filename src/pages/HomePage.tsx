@@ -1,8 +1,11 @@
+import { useAppContext } from '../context/AppContext'
 import { useHistoricalEvents } from '../hooks/useHistoricalEvents'
 import { useLocations } from '../hooks/useLocations'
 import { useNpcs } from '../hooks/useNpcs'
 
 function HomePage() {
+  const { globalMessage } = useAppContext()
+
   const {
     locations,
     totalLocations,
@@ -78,6 +81,10 @@ function HomePage() {
         <span className="inline-flex rounded-full border border-cyan-400/30 bg-cyan-400/10 px-3 py-1 text-sm font-medium text-cyan-300">
           Dashboard
         </span>
+
+        <p className="mt-4 text-sm font-medium text-cyan-200">
+          {globalMessage}
+        </p>
 
         <h2 className="mt-6 text-4xl font-bold tracking-tight text-white">
           Organiza tu mundo de campaña en un solo lugar
