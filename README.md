@@ -39,10 +39,11 @@ El objetivo es ofrecer una herramienta moderna, rápida y escalable para el worl
 
 La aplicación sigue una arquitectura **fullstack desacoplada**:
 
+```txt
 Frontend (React + TypeScript + Vite)
-↓
+        ↓
 Cliente API tipado (fetch)
-↓
+        ↓
 Backend REST (Node.js + Express)
 
 
@@ -92,7 +93,10 @@ server/src/
 ├── routes/
 ├── controllers/
 ├── services/
-└── config/
+├── config/
+├── middleware/
+├── models/
+└── data/
 
 
 Características:
@@ -107,11 +111,20 @@ Características:
 
 ## 🔌 API Endpoints
 
-Ejemplos:
-GET /api/v1/locations
-GET /api/v1/npcs
-GET /api/v1/events
-GET /api/v1/generators
+Ejemplos de endpoints disponibles:
+
+```txt
+GET    /api/v1/locations
+GET    /api/v1/npcs
+GET    /api/v1/events
+GET    /api/v1/generators
+```
+
+Endpoint base del backend:
+
+```txt
+https://worldforge-5e.onrender.com
+```
 
 
 ---

@@ -1,140 +1,76 @@
-# Idea del proyecto
+# 🌐 WorldForge 5e
 
-## Descripción general
+## 🔗 Enlaces del proyecto
 
-El proyecto consiste en el desarrollo de una aplicación web llamada **WorldForge 5e**, diseñada para ayudar a jugadores y, especialmente, al Dungeon Masters (DM) de *Dungeons & Dragons 5ª edición* a organizar y gestionar la información de sus mundos de campaña.
-
-La aplicación permite centralizar datos como localizaciones, personajes no jugadores (NPCs), eventos históricos y generar contenido aleatorio contextualizado para enriquecer las sesiones de juego.
-
----
-
-## Problema que intenta resolver
-
-En partidas de rol como Dungeons & Dragons, los Dungeon Masters suelen gestionar una gran cantidad de información:
-
-* Lugares del mundo (ciudades, bosques, reinos, etc.)
-* NPCs con roles, historias y relaciones
-* Eventos históricos relevantes
-* Ideas improvisadas durante la sesión
-
-Habitualmente, esta información se guarda en documentos desorganizados, notas dispersas o herramientas poco especializadas, lo que dificulta:
-
-* Encontrar información rápidamente durante una sesión
-* Mantener coherencia narrativa
-* Improvisar contenido de forma consistente
-
-WorldForge 5e nace para resolver este problema, ofreciendo una herramienta centralizada, visual y estructurada.
+Frontend: https://worldforge-5e.vercel.app/  
+Backend: https://worldforge-5e.onrender.com  
 
 ---
 
-## Usuario objetivo
+## 💡 Idea del proyecto
 
-El usuario principal de la aplicación es:
+WorldForge 5e es una aplicación web diseñada para ayudar a los Dungeon Masters (DMs) a organizar y gestionar su mundo de campaña en Dungeons & Dragons 5ª edición.
 
-* **Dungeon Masters (DMs)** de Dungeons & Dragons 5e
+El problema que intenta resolver es la falta de herramientas simples y centralizadas para gestionar información clave como:
 
-También puede ser útil para:
+- Localizaciones
+- NPCs (personajes no jugables)
+- Eventos históricos
+- Generadores aleatorios
 
-* Jugadores que quieran desarrollar su propio mundo
-* Creadores de contenido narrativo o worldbuilding
-
-El usuario tiene como objetivo principal organizar su mundo de campaña y generar contenido útil en tiempo real durante las sesiones.
-
----
-
-## Funcionalidades principales
-
-La aplicación incluye las siguientes funcionalidades clave:
-
-### Gestión de localizaciones
-
-* Listado de localizaciones del mundo
-* Búsqueda por nombre, tipo, clima o descripción
-* Creación de nuevas localizaciones mediante formulario
-* Edición de localizaciones existentes
-* Eliminación con confirmación narrativa (modal personalizado)
-* Vista de detalle de cada localización
-
-### Relación de datos
-
-* Visualización de NPCs asociados a una localización
-* Visualización de eventos históricos relacionados
-* Navegación estructurada entre entidades del mundo
-
-### Generadores aleatorios
-
-* Generación de eventos, encuentros y tesoros
-* Resultados enriquecidos con:
-
-  * Localización
-  * NPC implicado
-  * Nivel de peligro
-  * Estado (maldito o no)
-  * Consecuencia o recompensa
-* Generador contextual desde una localización concreta
-
-### Dashboard
-
-* Vista general del mundo con métricas:
-
-  * Número de localizaciones
-  * Número de NPCs
-  * Número de eventos
-  * Generadores disponibles
+Muchos DMs utilizan documentos desorganizados o múltiples herramientas separadas, lo que dificulta la gestión del mundo.
 
 ---
 
-## Funcionalidades opcionales
+## 👤 Usuario objetivo
 
-Estas funcionalidades no son esenciales pero mejoran la experiencia:
+El usuario principal es:
 
-* Historial de resultados generados
-* Guardado de contenido generado (solo si el usuario lo desea)
-* Interfaz visual mejorada con indicadores de peligro
-* Mensajes narrativos personalizados (ej. al eliminar contenido)
-
----
-
-## Posibles mejoras futuras
-
-El proyecto puede evolucionar en múltiples direcciones:
-
-### Persistencia real de datos
-
-* Integración con base de datos (PostgreSQL, MongoDB, etc.)
-* Persistencia permanente tras reiniciar el servidor
-
-### Sistema de autenticación
-
-* Usuarios registrados
-* Mundos privados por usuario
-
-### Relaciones más complejas
-
-* NPCs con relaciones entre sí
-* Eventos encadenados
-* Facciones o grupos
-
-### Editor avanzado
-
-* Edición rica de texto (tipo Notion)
-* Adjuntar imágenes o mapas
-
-### Generadores más avanzados
-
-* Generación basada en IA
-* Personalización de reglas de generación
-
-### Mejora de experiencia de usuario
-
-* Animaciones
-* Drag & drop
-* Filtros avanzados
+- Dungeon Masters (DMs) de Dungeons & Dragons 5e
+- Jugadores que quieran organizar su propio lore o mundo
+- Personas interesadas en worldbuilding
 
 ---
 
-## Conclusión
+## ⚙️ Funcionalidades principales
 
-WorldForge 5e es una herramienta orientada a mejorar la organización y creatividad en partidas de rol, proporcionando una base sólida para gestionar mundos de campaña y generar contenido dinámico.
+- Visualizar localizaciones del mundo
+- Gestionar NPCs
+- Consultar eventos históricos
+- Dashboard con estadísticas del mundo
+- Conexión a una API backend (fuente de verdad)
+- Interfaz moderna con Tailwind CSS
 
-El proyecto combina funcionalidades prácticas con una interfaz moderna y una arquitectura escalable, permitiendo futuras ampliaciones sin necesidad de rehacer la base del sistema.
+---
+
+## ⭐ Funcionalidades opcionales
+
+- Crear y editar NPCs o localizaciones
+- Sistema de campañas
+- Guardado persistente en base de datos
+- Generadores aleatorios avanzados
+- Filtros y búsqueda
+
+---
+
+## 🚀 Mejoras futuras
+
+- Autenticación de usuarios
+- Sistema multi-campaña
+- Exportación a PDF
+- Integración con mapas interactivos
+- Mejoras en UX/UI
+- Cacheo y optimización de peticiones
+- Testing automatizado
+
+---
+
+## 🧠 Conclusión
+
+WorldForge 5e es una herramienta orientada a simplificar la gestión de mundos de rol, aplicando arquitectura moderna fullstack con:
+
+- Frontend en React + TypeScript
+- Backend en Node.js + Express
+- Comunicación mediante API REST
+
+El objetivo es crear una base sólida, escalable y fácil de mantener.
